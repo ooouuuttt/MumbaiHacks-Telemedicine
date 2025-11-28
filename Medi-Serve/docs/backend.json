@@ -1,0 +1,258 @@
+
+{
+  "entities": {
+    "PharmacyProfile": {
+      "title": "Pharmacy Profile",
+      "description": "Represents the profile of a pharmacy owner.",
+      "type": "object",
+      "properties": {
+        "ownerName": {
+          "type": "string",
+          "description": "The name of the pharmacy owner."
+        },
+        "pharmacyName": {
+          "type": "string",
+          "description": "The name of the pharmacy."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The contact email for the pharmacy."
+        },
+        "contactNumber": {
+            "type": "string",
+            "description": "The contact phone number for the pharmacy."
+        },
+        "licenseCertificateUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the uploaded license certificate."
+        },
+        "kycUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the uploaded KYC document."
+        },
+        "location": {
+            "type": "string",
+            "description": "The physical address of the pharmacy."
+        },
+        "timings": {
+            "type": "string",
+            "description": "The operating hours of the pharmacy."
+        },
+        "isOpen": {
+            "type": "boolean",
+            "description": "Indicates if the pharmacy is currently open or closed."
+        },
+        "status": {
+            "type": "boolean",
+            "description": "Indicates if the pharmacy is currently open (true) or closed (false)."
+        }
+      },
+      "required": ["ownerName", "pharmacyName", "email"]
+    },
+    "StockItem": {
+      "title": "Stock Item",
+      "description": "Represents an item in the pharmacy's stock.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the medicine."
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The manufacturer of the medicine."
+        },
+        "description": {
+            "type": "string",
+            "description": "A description of the medicine."
+        },
+        "requiresPrescription": {
+            "type": "boolean",
+            "description": "Indicates if a prescription is required."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity in stock."
+        },
+        "expiryDate": {
+          "type": "string",
+          "format": "date",
+          "description": "The expiry date of the medicine."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the medicine."
+        },
+        "lowStockThreshold": {
+            "type": "number",
+            "description": "The threshold for a low stock warning."
+        }
+      },
+      "required": ["name", "manufacturer", "quantity", "expiryDate", "price"]
+    },
+    "MediNotifyItem": {
+        "title": "MediNotify Item",
+        "description": "Represents a notification in the MediNotify collection.",
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": ["low-stock", "expiry", "new-prescription", "new-order"],
+                "description": "The type of the notification."
+            },
+            "message": {
+                "type": "string",
+                "description": "The content of the notification message."
+            },
+            "date": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The timestamp when the notification was created."
+            },
+            "isRead": {
+                "type": "boolean",
+                "description": "Indicates if the notification has been read."
+            }
+        },
+        "required": ["type", "message", "date", "isRead"]
+    },
+    "MediPrescriptionItem": {
+      "title": "MediPrescription Item",
+      "description": "Represents a prescription in the MediPrescription collection.",
+      "type": "object",
+      "properties": {
+        "patientName": {
+          "type": "string",
+          "description": "The name of the patient."
+        },
+        "doctorName": {
+          "type": "string",
+          "description": "The name of the doctor who issued the prescription."
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the prescription was issued."
+        },
+        "medicines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "medicineId": {
+                "type": "string",
+                "description": "The ID of the medicine in the stock."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the medicine."
+              },
+              "dosage": {
+                "type": "string",
+                "description": "The prescribed dosage."
+              },
+              "quantity": {
+                "type": "number",
+                "description": "The quantity prescribed."
+              }
+            },
+            "required": ["medicineId", "name", "dosage", "quantity"]
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Ready for Pickup", "Completed", "Out of Stock"],
+          "description": "The status of the prescription."
+        }
+      },
+      "required": ["patientName", "doctorName", "date", "medicines", "status"]
+    },
+    "OrderItem": {
+      "title": "Order Item",
+      "description": "Represents an order in the orders collection.",
+      "type": "object",
+      "properties": {
+        "customerName": {
+            "type": "string",
+            "description": "The name of the customer."
+        },
+        "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the order was created."
+        },
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "medicineId": {
+                        "type": "string",
+                        "description": "The ID of the medicine."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the medicine."
+                    },
+                    "quantity": {
+                        "type": "number",
+                        "description": "The quantity ordered."
+                    }
+                },
+                "required": ["medicineId", "name", "quantity"]
+            }
+        },
+        "total": {
+            "type": "number",
+            "description": "The total cost of the order."
+        },
+        "status": {
+            "type": "string",
+            "enum": ["Pending", "Processing", "Ready for Pickup", "Completed", "Cancelled"],
+            "description": "The status of the order."
+        }
+      },
+      "required": ["customerName", "createdAt", "items", "total", "status"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/pharmacies/{pharmacyId}": {
+      "schema": {
+        "$ref": "#/entities/PharmacyProfile"
+      },
+      "description": "Stores pharmacy profile information, where the document ID is the Firebase Auth UID."
+    },
+    "/pharmacies/{pharmacyId}/stock/{stockId}": {
+        "schema": {
+            "$ref": "#/entities/StockItem"
+        },
+        "description": "Stores stock items for a specific pharmacy."
+    },
+    "/pharmacies/{pharmacyId}/MediNotify/{notificationId}": {
+        "schema": {
+            "$ref": "#/entities/MediNotifyItem"
+        },
+        "description": "Stores notifications for a specific pharmacy."
+    },
+    "/pharmacies/{pharmacyId}/MediPrescription/{prescriptionId}": {
+      "schema": {
+        "$ref": "#/entities/MediPrescriptionItem"
+      },
+      "description": "Stores prescription details for a specific pharmacy."
+    },
+    "/pharmacies/{pharmacyId}/orders/{orderId}": {
+      "schema": {
+        "$ref": "#/entities/OrderItem"
+      },
+      "description": "Stores order details for a specific pharmacy."
+    }
+  }
+}
+
+    
