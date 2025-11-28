@@ -1,0 +1,47 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "Doctor avatar",
+      "imageUrl": "https://picsum.photos/seed/doc1/100/100",
+      "imageHint": "doctor portrait"
+    },
+    {
+      "id": "2",
+      "description": "Patient avatar 1",
+      "imageUrl": "https://picsum.photos/seed/patient1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "3",
+      "description": "Patient avatar 2",
+      "imageUrl": "https://picsum.photos/seed/patient2/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "4",
+      "description": "Patient avatar 3",
+      "imageUrl": "https://picsum.photos/seed/patient3/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "5",
+      "description": "Patient avatar 4",
+      "imageUrl": "https://picsum.photos/seed/patient4/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "6",
+      "description": "Patient avatar 5",
+      "imageUrl": "https://picsum.photos/seed/patient5/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "7",
+      "description": "Patient avatar 6",
+      "imageUrl": "https://picsum.photos/seed/patient6/100/100",
+      "imageHint": "person portrait"
+    }
+  ]
+}
