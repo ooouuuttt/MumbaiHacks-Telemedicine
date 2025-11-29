@@ -7,7 +7,7 @@ This suite addresses the entire care cycle: **patients → doctors → pharmacie
 
 ---
 
-# 🏥 Medico-Suite Architecture Overview
+#  Medico-Suite Architecture Overview
 
 Medico-Suite is built around three major applications:
 
@@ -23,36 +23,36 @@ Each module runs independently but synchronizes through Firebase Firestore, AI a
 
 Medico empowers users with AI-powered health insights, online consultations, medicine discovery, and digital health record management.
 
-## ✨ Key Features
+## Key Features
 
-### 🧠 AI Agents
+### AI Agents
 - **Symptom Checker Agent** – Identifies possible conditions, urgency, and next steps  
 - **Prescription Scanner Agent** – Extracts medicines, dosage, doctor info  
 - **Google Calendar Reminder Agent** – Auto-schedules medicines into user’s Google Calendar  
 
-### 👨‍⚕ Teleconsultations
+### Teleconsultations
 - Book appointments  
 - Video / audio / chat consultations  
 - Intelligent slot allocation  
 - Doctor profile viewing  
 
-### 🎤 Voice Commands
+### Voice Commands
 Supports: **English, Hindi, Punjabi**
 
-### 💊 Medicine Ordering
+### Medicine Ordering
 - Search local pharmacies  
 - Place orders via search or AI-digitized prescriptions  
 - E-prescriptions for faster pickup  
 
-### 📜 Order History & Tracking
+### Order History & Tracking
 
-### 📂 Unified Health Records
+### Unified Health Records
 - Vitals, documents, summaries  
 
-### 📝 E-Prescriptions
+### E-Prescriptions
 - View, download, and use for medicine orders  
 
-### 🔔 Notifications & Multi-language UI
+### Notifications & Multi-language UI
 
 ---
 
@@ -60,21 +60,21 @@ Supports: **English, Hindi, Punjabi**
 
 An interactive, real-time medical workstation enabling doctors to manage patients, consultations, and clinical decisions with AI support.
 
-## 🔥 Core AI Agents
+## Core AI Agents
 
-### 🧠 Symptom Summarization Agent
+### Symptom Summarization Agent
 Summaries, red flags, key vitals, follow-ups.
 
-### 📄 Prescription Drafting Agent
+### Prescription Drafting Agent
 Drafts precise, structured prescriptions based on notes and history.
 
-### 🩻 Multi-Model Image Analyzer Agent
+### Multi-Model Image Analyzer Agent
 Auto-detects image type → routes to correct medical model → returns structured clinical findings.
 
-### 📬 Notification Intelligence Agent
+### Notification Intelligence Agent
 Manages all real-time triggers across the doctor ecosystem.
 
-## 🚀 Key Features
+## Key Features
 - Secure doctor authentication and editable profile  
 - Real-time consultation dashboard  
 - Appointment lifecycle management  
@@ -88,39 +88,39 @@ Manages all real-time triggers across the doctor ecosystem.
 
 A modern solution designed for pharmacies to manage inventory, prescriptions, orders, and AI-based business insights.
 
-## 🚀 Core Features
+## Core Features
 
-### 🔐 Authentication & Secure Portal
+### Authentication & Secure Portal
 
-### 📊 Pharmacy Dashboard
+### Pharmacy Dashboard
 - Total medicines  
 - Low/out-of-stock alerts  
 - Incoming prescriptions  
 - Real-time notifications  
 
-### 🏥 Stock & Inventory Management
+### Stock & Inventory Management
 - Full inventory control  
 - Indicators: In Stock / Low Stock / Out Of Stock  
 - Quick add/edit workflows  
 
-### 📜 Prescription Handling
+### Prescription Handling
 - Centralized table  
 - Status: **Pending → Ready → Completed**  
 
-### 🤖 AI Agents
+### AI Agents
 - **Notification Agent** – Auto-generates customer alerts  
 - **Sales Insights Agent** – Top sellers, seasonal trends  
 - **Inventory Forecasting Agent** – Predicts stock requirements  
 - **Stock Optimization Agent** – Prevents stock imbalance  
 - **Symptom Checker Agent** – Customer-side symptom analysis  
 
-### 📦 Order Fulfillment
+### Order Fulfillment
 
-### 🏪 Profile Management & Alerts
+### Profile Management & Alerts
 
 ---
 
-# 🧠 Medico-Suite AI Layer (Cross-Application)
+# Medico-Suite AI Layer (Cross-Application)
 
 All three apps leverage intelligent AI flows that support:
 
@@ -135,7 +135,7 @@ AI agents run server-side for consistency and compliance.
 
 ---
 
-# 🛠 Tech Stack (Suite-Wide)
+# Tech Stack (Suite-Wide)
 
 - **Framework:** Next.js (App Router)  
 - **UI Libraries:** Tailwind CSS + shadcn/ui  
@@ -146,7 +146,7 @@ AI agents run server-side for consistency and compliance.
 
 ---
 
-# ⚙ Getting Started (Monorepo or Multi-Repo)
+# Getting Started (Monorepo or Multi-Repo)
 
 If using a monorepo (recommended):
 /medico-suite
@@ -158,7 +158,7 @@ If using a monorepo (recommended):
 
 ---
 
-## 1️⃣ Prerequisites
+##  Prerequisites
 
 - Node.js v18+  
 - npm or yarn  
@@ -166,15 +166,16 @@ If using a monorepo (recommended):
 
 ---
 
-## 2️⃣ Setup Steps (General)
+##  Setup Steps (General)
 
 ### Clone the Repos / Monorepo
 
 ```bash
 git clone <medico-suite-repo>
 cd medico-suite
-
+```
 Install Dependencies (per app)
+```
 cd medico
 npm install
 
@@ -183,39 +184,43 @@ npm install
 
 cd ../mediserve
 npm install
-
-Setup Environment Variables for Each App
+```
+### Setup Environment Variables for Each App
 
 All apps require Firebase:
-
+```
 NEXT_PUBLIC_FIREBASE_API_KEY=...
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
-
+```
 
 Apps with OAuth or agent flows may require:
-
+```
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 AI_AGENT_SECRET_KEY=...
-
+```
 
 Place .env.local inside each project root.
 
-3️⃣ Run Each Application
+### Run Each Application
 Medico (Patient App)
 npm run dev
 
 Medico-Doc (Doctor Dashboard)
+```
 npm run dev
+```
 
 MediServe (Pharmacy System)
+```
 npm run dev
+```
 
-🎯 Why Medico-Suite?
+ Why Medico-Suite?
 
 Fully automated healthcare ecosystem
 
@@ -227,7 +232,9 @@ Real-time cloud-native infrastructure
 
 End-to-end digital transformation of the healthcare journey
 
-📎 Conclusion
+---
+
+ ## Conclusion
 
 Medico-Suite is not just a set of applications—it's a complete digital healthcare ecosystem.
 It connects patients, doctors, and pharmacies through intelligent workflows, real-time data, and advanced AI capabilities.
