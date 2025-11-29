@@ -209,7 +209,7 @@ const HealthRecords = ({ user }: HealthRecordsProps) => {
                 <p className="text-muted-foreground text-sm mt-2">{isDragActive ? 'Drop the files here...' : 'Drag & drop files here, or click to upload'}</p>
             </Card>
             <div className="space-y-2">
-                {[...(profile?.labReports || []), ...myFiles.map(f => ({id: f.name, title: f.name, url: '', date: f.lastModifiedDate?.toLocaleDateString() ?? new Date().toLocaleDateString()}))].map((doc) => (
+                {[...(profile?.labReports || []), ...myFiles.map(f => ({id: f.name, title: f.name, url: '', date: new Date(f.lastModified).toLocaleDateString()}))].map((doc) => (
                     <Card key={doc.id} className="shadow-sm rounded-xl">
                         <CardContent className="p-3 flex items-center gap-3">
                             <div className="bg-secondary p-2 rounded-md">

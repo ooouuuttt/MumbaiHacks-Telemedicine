@@ -17,6 +17,9 @@ import { saveScannedPrescription } from '@/lib/prescription-service';
 import { createNotification } from '@/lib/notification-service';
 import { Pharmacy, getPharmaciesWithStock } from '@/lib/pharmacy-service';
 import { formatDoctorName } from '@/lib/utils';
+import { auth } from '@/lib/firebase';
+import ConfirmAddCalendarModal from './ConfirmAddCalendarModal';
+import { buildEventsFromPrescription, getBrowserTimezone, ParsedPrescription } from '@/lib/calendarUtils';
 
 interface PrescriptionReaderProps {
   user: User;
@@ -30,6 +33,8 @@ const PrescriptionReader = ({ user, setActiveTab }: PrescriptionReaderProps) => 
     const [result, setResult] = useState<PrescriptionReaderOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isCreatingReminders, setIsCreatingReminders] = useState(false);
+    const [showCalendarModal, setShowCalendarModal] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
     const { toast } = useToast();
@@ -81,6 +86,148 @@ const PrescriptionReader = ({ user, setActiveTab }: PrescriptionReaderProps) => 
         }
     };
 
+    const handleAddCalendarReminders = async (medicines: any[]) => {
+      if (!result || !user) return;
+      
+      setIsCreatingReminders(true);
+
+      try {
+                // Ensure we have a firebase user instance (use prop or fallback to auth.currentUser)
+                const clientUser = user || auth.currentUser;
+                if (!clientUser) {
+                    toast({
+                        variant: 'destructive',
+                        title: 'Not Signed In',
+                        description: 'Please sign in to use calendar reminders.',
+                    });
+                    setIsCreatingReminders(false);
+                    return;
+                }
+
+                // Get a fresh Firebase ID token (force refresh to avoid expired tokens)
+                let idToken: string;
+                try {
+                    idToken = await clientUser.getIdToken(true);
+                } catch (tokenErr: any) {
+                    console.error('Failed to get ID token (prescription-reader):', tokenErr);
+                    // If token refresh fails, suggest re-authentication
+                    toast({
+                        variant: 'destructive',
+                        title: 'Authentication Required',
+                        description: 'Session expired — please sign out and sign in again.',
+                    });
+                    setIsCreatingReminders(false);
+                    return;
+                }
+
+        // Build calendar events
+        const prescription: ParsedPrescription = {
+          ...result,
+          medicines,
+        };
+
+        const timezone = getBrowserTimezone();
+        const events = buildEventsFromPrescription(prescription, timezone);
+
+        // Call backend to create events
+        const response = await fetch('/api/calendar/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            events,
+            prescriptionId: result.date, // Use date as simple ID or generate a proper one
+          }),
+        });
+
+                // Parse JSON only when server returned JSON; otherwise capture text for debugging
+                const contentType = response.headers.get('content-type') || '';
+                let data: any = null;
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const txt = await response.text();
+                    console.error('Non-JSON response from /api/calendar/create:', txt);
+                    // Surface a friendly error to the user
+                    toast({
+                        variant: 'destructive',
+                        title: 'Server Error',
+                        description: 'Received unexpected response from server. Check console/network for details.',
+                    });
+                    setIsCreatingReminders(false);
+                    return;
+                }
+
+                                if (response.status === 403 && data.needsReauth) {
+          // User hasn't granted calendar access, redirect to consent
+          toast({
+            title: 'Calendar Access Required',
+            description: 'Opening Google Calendar authorization...',
+          });
+
+          // Open OAuth in new window
+          const oauthWindow = window.open(
+            `/api/oauth/google?uid=${user.uid}`,
+            'calendar-consent',
+            'width=500,height=600'
+          );
+
+          // Show retry button
+          toast({
+            title: 'Grant Calendar Access',
+            description: 'Please authorize calendar access in the new window, then click Retry.',
+          });
+
+          return;
+        }
+
+                // Handle unauthorized / expired ID token
+                if (response.status === 401) {
+                    // If backend signals the oauth refresh needs reauth (e.g. invalid_grant)
+                    if (data?.needsReauth || data?.error === 'invalid_grant') {
+                        toast({
+                            title: 'Calendar Access Expired',
+                            description: 'Opening Google Calendar authorization to re-consent...',
+                        });
+                        window.open(`/api/oauth/google?uid=${clientUser.uid}`, 'calendar-consent', 'width=500,height=600');
+                        return;
+                    }
+
+                    // Otherwise it's an authentication error with the ID token
+                    console.error('Server rejected ID token:', data);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Authentication Failed',
+                        description: 'Your session may have expired. Please sign out and sign in again.',
+                    });
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to create calendar events');
+                }
+
+        // Success!
+        toast({
+          title: 'Reminders Added',
+          description: `${data.created.length} medicine reminders added to Google Calendar`,
+        });
+
+        setShowCalendarModal(false);
+      } catch (error) {
+        console.error('Calendar reminder error:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Failed to Add Reminders',
+          description: (error as Error)?.message || 'Could not create calendar events. Please try again.',
+        });
+      } finally {
+        setIsCreatingReminders(false);
+      }
+    };
+
     const handleSavePrescription = async () => {
       if (!result) return;
       setIsSaving(true);
@@ -97,7 +244,7 @@ const PrescriptionReader = ({ user, setActiveTab }: PrescriptionReaderProps) => 
           title: "Prescription Saved",
           description: "The prescription has been added to your health records.",
         });
-        setActiveTab('health-records');
+        setActiveTab('records');
       } catch (error) {
         console.error("Failed to save prescription:", error);
         toast({
@@ -180,9 +327,14 @@ const PrescriptionReader = ({ user, setActiveTab }: PrescriptionReaderProps) => 
                 <Card className="rounded-xl animate-in fade-in duration-500">
                     <CardHeader className='flex-row items-center justify-between'>
                         <CardTitle className='flex items-center gap-2'><CheckCircle className='text-green-500' /> Analysis Complete</CardTitle>
-                         <Button onClick={handleSavePrescription} disabled={isSaving} size="sm">
-                            {isSaving ? <><Activity className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Save</>}
-                        </Button>
+                        <div className='flex gap-2'>
+                             <Button onClick={() => setShowCalendarModal(true)} disabled={isCreatingReminders} variant="outline" size="sm">
+                                Calendar
+                            </Button>
+                            <Button onClick={handleSavePrescription} disabled={isSaving} size="sm">
+                                {isSaving ? <><Activity className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Save</>}
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex justify-between text-sm">
@@ -232,6 +384,15 @@ const PrescriptionReader = ({ user, setActiveTab }: PrescriptionReaderProps) => 
                     </CardContent>
                 </Card>
             )}
+
+            {/* Calendar reminder modal */}
+            <ConfirmAddCalendarModal
+              isOpen={showCalendarModal}
+              prescription={result}
+              isLoading={isCreatingReminders}
+              onConfirm={handleAddCalendarReminders}
+              onCancel={() => setShowCalendarModal(false)}
+            />
         </div>
     );
 };

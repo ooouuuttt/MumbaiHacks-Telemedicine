@@ -134,7 +134,17 @@ export default function AppShell({ user }: AppShellProps) {
     const unsubscribe = onSnapshot(q, (snapshot) => {
         snapshot.forEach((doc) => {
             const appointment = doc.data();
-            const appointmentTime = (appointment.date as Timestamp).toDate();
+            // Handle different date formats: Timestamp, Date, or string
+            let appointmentTime: Date;
+            if (appointment.date instanceof Timestamp) {
+              appointmentTime = appointment.date.toDate();
+            } else if (appointment.date instanceof Date) {
+              appointmentTime = appointment.date;
+            } else if (typeof appointment.date === 'string') {
+              appointmentTime = new Date(appointment.date);
+            } else {
+              return; // Skip if date is invalid
+            }
             const now = new Date();
             const fiveMinutesInMs = 5 * 60 * 1000;
 
@@ -166,7 +176,17 @@ export default function AppShell({ user }: AppShellProps) {
       onSnapshot(q, (snapshot) => {
         snapshot.forEach((doc) => {
             const appointment = doc.data();
-            const appointmentTime = (appointment.date as Timestamp).toDate();
+            // Handle different date formats: Timestamp, Date, or string
+            let appointmentTime: Date;
+            if (appointment.date instanceof Timestamp) {
+              appointmentTime = appointment.date.toDate();
+            } else if (appointment.date instanceof Date) {
+              appointmentTime = appointment.date;
+            } else if (typeof appointment.date === 'string') {
+              appointmentTime = new Date(appointment.date);
+            } else {
+              return; // Skip if date is invalid
+            }
             const fiveMinutesInMs = 5 * 60 * 1000;
              if (appointmentTime.getTime() > now.getTime() && appointmentTime.getTime() - now.getTime() < fiveMinutesInMs) {
                  const notificationSent = sessionStorage.getItem(`notif_${doc.id}`);

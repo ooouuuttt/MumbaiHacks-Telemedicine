@@ -7,7 +7,7 @@ import { getPrescriptions, Prescription } from '@/lib/prescription-service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
-import { FileText, Clock, Download, ShoppingCart, Send, Search } from 'lucide-react';
+import { FileText, Clock, Download, ShoppingCart, Send, Search, Calendar } from 'lucide-react';
 import { Button } from './ui/button';
 import jsPDF from 'jspdf';
 import type { Tab } from './app-shell';
@@ -17,6 +17,10 @@ import { Medication } from '@/lib/user-service';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { formatDoctorName } from '@/lib/utils';
+import ConfirmAddCalendarModal from './ConfirmAddCalendarModal';
+import { buildEventsFromPrescription, getBrowserTimezone, ParsedPrescription } from '@/lib/calendarUtils';
+import { auth } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 interface PrescriptionsProps {
   user: User;
@@ -29,6 +33,10 @@ const Prescriptions = ({ user, setActiveTab }: PrescriptionsProps) => {
   const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
   const [selectedMedicines, setSelectedMedicines] = useState<Medication[]>([]);
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [isCreatingReminders, setIsCreatingReminders] = useState(false);
+  const [calendarPrescription, setCalendarPrescription] = useState<ParsedPrescription | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!user) {
@@ -105,6 +113,138 @@ const Prescriptions = ({ user, setActiveTab }: PrescriptionsProps) => {
 
     doc.save(`prescription-${prescription.id}.pdf`);
   }
+
+  const handleAddReminders = (prescription: Prescription) => {
+    // Convert existing prescription to ParsedPrescription format
+    const parsed: ParsedPrescription = {
+      doctorName: prescription.doctorName,
+      date: new Date(prescription.createdAt.toDate()).toLocaleDateString(),
+      medicines: prescription.medications.map(med => ({
+        name: med.name,
+        dosage: med.dosage,
+        dose: med.dosage,
+        frequency: med.frequency,
+        duration: med.days ? `${med.days} days` : '7 days',
+        notes: '',
+      })),
+    };
+
+    setCalendarPrescription(parsed);
+    setShowCalendarModal(true);
+  };
+
+  const handleConfirmCalendarReminders = async (medicines: any[]) => {
+    if (!user) return;
+    
+    setIsCreatingReminders(true);
+
+    try {
+      // Ensure we have a firebase user instance (use prop or fallback to auth.currentUser)
+      const clientUser = user || auth.currentUser;
+      if (!clientUser) {
+        toast({
+          variant: 'destructive',
+          title: 'Not Signed In',
+          description: 'Please sign in to use calendar reminders.',
+        });
+        setIsCreatingReminders(false);
+        return;
+      }
+
+      // Force-refresh ID token to avoid using an expired token
+      let idToken: string;
+      try {
+        idToken = await clientUser.getIdToken(true);
+      } catch (tokenErr: any) {
+        console.error('Failed to get ID token (prescriptions):', tokenErr);
+        toast({
+          variant: 'destructive',
+          title: 'Authentication Required',
+          description: 'Session expired — please sign out and sign in again.',
+        });
+        setIsCreatingReminders(false);
+        return;
+      }
+
+      const prescription: ParsedPrescription = {
+        doctorName: calendarPrescription?.doctorName,
+        date: calendarPrescription?.date,
+        medicines,
+      };
+
+      const timezone = getBrowserTimezone();
+      const events = buildEventsFromPrescription(prescription, timezone);
+
+      const response = await fetch('/api/calendar/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          events,
+          prescriptionId: calendarPrescription?.date,
+        }),
+      });
+
+      // Parse JSON only when server returned JSON; otherwise capture text for debugging
+      const contentType = response.headers.get('content-type') || '';
+      let data: any = null;
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const txt = await response.text();
+        console.error('Non-JSON response from /api/calendar/create:', txt);
+        toast({
+          variant: 'destructive',
+          title: 'Server Error',
+          description: 'Received unexpected response from server. Check console/network for details.',
+        });
+        setIsCreatingReminders(false);
+        return;
+      }
+
+      if (response.status === 403 && data.needsReauth) {
+        toast({
+          title: 'Calendar Access Required',
+          description: 'Opening Google Calendar authorization...',
+        });
+
+        const oauthWindow = window.open(
+          `/api/oauth/google?uid=${user.uid}`,
+          'calendar-consent',
+          'width=500,height=600'
+        );
+
+        toast({
+          title: 'Grant Calendar Access',
+          description: 'Please authorize calendar access in the new window, then click Retry.',
+        });
+
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create calendar events');
+      }
+
+      toast({
+        title: 'Reminders Added',
+        description: `${data.created.length} medicine reminders added to Google Calendar`,
+      });
+
+      setShowCalendarModal(false);
+    } catch (error) {
+      console.error('Calendar reminder error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to Add Reminders',
+        description: (error as Error)?.message || 'Could not create calendar events. Please try again.',
+      });
+    } finally {
+      setIsCreatingReminders(false);
+    }
+  };
 
   const handleOrder = (prescription: Prescription) => {
     setSelectedPrescription(prescription);
@@ -253,12 +393,16 @@ const Prescriptions = ({ user, setActiveTab }: PrescriptionsProps) => {
                   {prescription.followUp && <p className='text-sm font-semibold flex items-center gap-2'><Clock className='w-4 h-4 text-primary' /> {prescription.followUp}</p>}
               </CardFooter>
             )}
-            <CardFooter className='gap-2 pt-4 border-t'>
-                <Button variant='outline' className='w-full' onClick={() => handleDownload(prescription)}>
+            <CardFooter className='gap-2 pt-4 border-t flex-wrap'>
+                <Button variant='outline' className='flex-1 min-w-32' onClick={() => handleDownload(prescription)}>
                     <Download className='mr-2 h-4 w-4'/>
                     Download
                 </Button>
-                <Button className='w-full' onClick={() => handleOrder(prescription)}>
+                <Button variant='outline' className='flex-1 min-w-32' onClick={() => handleAddReminders(prescription)}>
+                    <Calendar className='mr-2 h-4 w-4'/>
+                    Add Reminders
+                </Button>
+                <Button className='flex-1 min-w-32' onClick={() => handleOrder(prescription)}>
                     <ShoppingCart className='mr-2 h-4 w-4'/>
                     Order Medicines
                 </Button>
@@ -323,6 +467,15 @@ const Prescriptions = ({ user, setActiveTab }: PrescriptionsProps) => {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        {/* Calendar reminder modal */}
+        <ConfirmAddCalendarModal
+          isOpen={showCalendarModal}
+          prescription={calendarPrescription}
+          isLoading={isCreatingReminders}
+          onConfirm={handleConfirmCalendarReminders}
+          onCancel={() => setShowCalendarModal(false)}
+        />
 
     </>
   );
