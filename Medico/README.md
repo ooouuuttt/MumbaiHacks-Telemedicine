@@ -1,168 +1,162 @@
-# MediServe – Pharmacy Management System (AI Agent–Enhanced)
+# Medico – Your Personal Health Companion
 
-MediServe is a robust, real-time pharmacy management platform built with Next.js and Firebase. It modernizes pharmacy workflows with integrated AI agents that automate routine tasks, optimize inventory health, strengthen customer communication, and deliver predictive operational insights.
-
----
-
-## 🚀 Features
+Medico is an advanced, AI-powered healthcare platform built using Next.js, Firebase, and custom intelligent AI agents. It delivers a fast, intuitive, and smart healthcare ecosystem—from symptom analysis to medicine ordering and appointment scheduling.
 
 ---
 
-## 🔐 Authentication
-
-- Secure registration and login using Firebase Authentication (Email & Password)
-- All operational features are protected behind authenticated routes
+## ✨ Features
 
 ---
 
-## 📊 Dashboard
+## 🧠 AI Agents (Core Intelligence Layer)
 
-A centralized command center offering real-time visibility into pharmacy performance.
+### **Symptom Checker AI Agent**
 
-**Key Metrics**
+Users describe their symptoms in natural language, and the system provides:
 
-- Total medicines
-- Low-stock items
-- Out-of-stock alerts
-
-**Incoming Prescriptions**
-
-- View newly received prescriptions pending processing
-
-**Real-Time Notifications**
-
-- Unread alerts for:
-  - Low stock
-  - New prescriptions
-  - Expiry warnings
-
----
-
-## 🏥 Stock & Inventory Management
-
-- View, search, filter, and sort the complete medicine inventory
-- Add new items with manufacturer, stock count, pricing, and expiry details
-- Automatic stock indicators:
-  - In Stock
-  - Low Stock
-  - Out of Stock
-
-Smart categorization ensures faster navigation and restocking efficiency.
-
----
-
-## 📜 Prescription Handling
-
-Manage prescriptions received from customers or doctors through a centralized table:
-
-- Track all incoming prescriptions
-- Update status: **Pending → Ready for Pickup → Completed**
-
----
-
-## 🤖 1. Prescription Notification Agent
-
-Automatically generates message-ready notifications to inform customers when their order is ready.  
-Designed for clarity and friendliness.
-
----
-
-## 📦 Order Fulfillment
-
-- Dedicated workflow to manage pharmacy orders
-- Track progress and update statuses
-- Supports smooth delivery or pickup operations
-
----
-
-## 📈 AI Agent–Driven Analytics & Reporting
-
-### 🤖 2. Sales Insights Agent
-
-Analyzes sales data to identify:
-
-- Best-selling medicines
-- Seasonal demand patterns
-- Sudden demand spikes
-
-### 🤖 3. Inventory Forecasting Agent
-
-Uses historical purchase trends to:
-
-- Predict future stock needs
-- Recommend reorder quantities
-- Flag potential overstock situations
-
-### 🤖 4. Stock Optimization Agent
-
-Offers data-backed suggestions to:
-
-- Prevent stockouts
-- Avoid overstocking
-- Maintain stable inventory cycles
-
-Insights are displayed through interactive visual charts.
-
----
-
-## 🧠 AI Symptom Checker Agent
-
-Allows customers to enter symptoms and receive:
-
-- Preliminary AI-generated symptom analysis
 - Possible conditions
-- Suggested next steps or advisories
+- Severity & urgency level
+- Recommended next actions (self-care, doctor visit, emergency indicators)
 
-Adds value beyond traditional pharmacy operations.
+### **Prescription Scanner AI Agent**
+
+Upload a photo of a handwritten or digital prescription. The AI extracts:
+
+- Medicine names
+- Dosage & frequency
+- Doctor’s information
+- Additional notes
+
+### **Google Calendar Medication Reminder Agent**
+
+Once medicine details are extracted, reminders can be automatically added to Google Calendar:
+
+- Medicine name
+- Dosage
+- Frequency
+- Start & end dates
+- Notification timings
 
 ---
 
-## 🏪 Profile Management
+## 👨‍⚕ Teleconsultations
 
-- Update pharmacy details, address, and contact information
-- Toggle Open/Closed status, visible across the dashboard
+- Book appointments across multiple medical specialties
+- View doctor profiles (experience, qualifications, specialization)
+- Choose consultation mode:
+  - Video
+  - Audio
+  - Real-time chat
+- Intelligent scheduling with available time slot suggestions
 
 ---
 
-## 🔔 Real-Time Notifications
+## 🎤 Voice Command System
 
-Automatic alerts for:
+Supports voice interaction in:
 
+- English
+- Hindi
+- Punjabi
+
+Users can navigate the app, book appointments, check symptoms, and more through voice commands.
+
+---
+
+## 💊 Medicine Ordering
+
+- Search for medicines and check availability across nearby pharmacies
+- Order medicines through:
+  - In-app search
+  - AI-digitized prescription
+- Send e-prescriptions to pharmacies for quick pickup
+
+---
+
+## 📜 Order History
+
+Track all previous medicine orders with clear timelines:
+
+- Pending
+- Ready for Pickup
+- Completed
+
+---
+
+## 📂 Health Records
+
+A centralized dashboard to manage all medical data:
+
+- Personal health profile
+- Vitals (BP, HR, etc.)
+- Consultation summaries
+- Uploaded medical documents
+
+---
+
+## 📝 E-Prescriptions
+
+Doctors can issue electronic prescriptions that users can:
+
+- View
+- Download
+- Use for medicine orders
+
+---
+
+## 🔔 Real-time Notifications
+
+Receive alerts for:
+
+- Appointment reminders
 - New prescriptions
-- Low stock levels
-- Out-of-stock medicines
-- Expiring inventory
+- Medicine order updates
 
-Ensures the pharmacy team never misses key operational events.
+---
+
+## 🌐 Multi-language Support
+
+Full UI translations available in:
+
+- English
+- Hindi
+- Punjabi
 
 ---
 
 ## 🛠 Tech Stack
 
 - **Framework:** Next.js (App Router)
-- **UI:** Tailwind CSS + shadcn/ui
-- **Backend & Database:** Firebase (Auth, Firestore)
-- **AI Agents:** Custom server-side agent flows
-- **Real-Time Automation:** Firebase Cloud Functions
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Database & Auth:** Firebase (Firestore, Auth)
+- **AI Agents:** Custom server-side AI agents
+- **Deployment:** Vercel
 
 ---
 
-## ⚙ Getting Started
+## 🚀 Getting Started
 
----
-
-### 1. Prerequisites
+### 1️⃣ Prerequisites
 
 - Node.js v18+
-- Active Firebase project
+- npm or yarn
 
 ---
 
-### 2. Setup Instructions
+### 2️⃣ Environment Setup
 
-#### Clone the Repository
+Create a `.env` file and add:
 
-```bash
-git clone <your-repository-url>
-cd <repository-name>
+```env
+# Firebase Config
+NEXT_PUBLIC_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID
+
+# Google OAuth for Calendar Integration
+GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET=YOUR_GOOGLE_CLIENT_SECRET
 ```
