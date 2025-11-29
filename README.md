@@ -149,4 +149,87 @@ AI agents run server-side for consistency and compliance.
 # ⚙ Getting Started (Monorepo or Multi-Repo)
 
 If using a monorepo (recommended):
+/medico-suite
+/medico # Patient app
+/medico-doc # Doctor dashboard
+/mediserve # Pharmacy app
+/shared # AI flows, utilities, configs
 
+
+---
+
+## 1️⃣ Prerequisites
+
+- Node.js v18+  
+- npm or yarn  
+- Firebase project  
+
+---
+
+## 2️⃣ Setup Steps (General)
+
+### Clone the Repos / Monorepo
+
+```bash
+git clone <medico-suite-repo>
+cd medico-suite
+
+Install Dependencies (per app)
+cd medico
+npm install
+
+cd ../medico-doc
+npm install
+
+cd ../mediserve
+npm install
+
+Setup Environment Variables for Each App
+
+All apps require Firebase:
+
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+
+
+Apps with OAuth or agent flows may require:
+
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+AI_AGENT_SECRET_KEY=...
+
+
+Place .env.local inside each project root.
+
+3️⃣ Run Each Application
+Medico (Patient App)
+npm run dev
+
+Medico-Doc (Doctor Dashboard)
+npm run dev
+
+MediServe (Pharmacy System)
+npm run dev
+
+🎯 Why Medico-Suite?
+
+Fully automated healthcare ecosystem
+
+AI-powered insights across patients, doctors, and pharmacies
+
+Unified but modular architecture
+
+Real-time cloud-native infrastructure
+
+End-to-end digital transformation of the healthcare journey
+
+📎 Conclusion
+
+Medico-Suite is not just a set of applications—it's a complete digital healthcare ecosystem.
+It connects patients, doctors, and pharmacies through intelligent workflows, real-time data, and advanced AI capabilities.
+
+This suite demonstrates scalable healthcare engineering, AI-driven decision support, and a modern cloud-native architecture ready for real-world deployment.
