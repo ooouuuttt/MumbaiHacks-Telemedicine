@@ -1,0 +1,21 @@
+
+{
+  "home": "होम",
+  "consult": "परामर्श",
+  "appointments": "अपॉइंटमेंट्स",
+  "records": "रिकॉर्ड्स",
+  "profile": "प्रोफ़ाइल",
+  "my_account": "मेरा खाता",
+  "log_out": "लॉग आउट",
+  "symptom_checker": "लक्षण परीक्षक",
+  "book_consultation": "परामर्श बुक करें",
+  "scan_prescription": "प्रिस्क्रिप्शन स्कैन करें",
+  "nearby_medical": "आस-पास के मेडिकल",
+  "order_medicines": "दवाइयाँ ऑर्डर करें",
+  "health_records": "स्वास्थ्य रिकॉर्ड",
+  "view_your_history": "अपना इतिहास देखें",
+  "reminders": "रिमाइंडर",
+  "health_news": "स्वास्थ्य समाचार",
+  "prescriptions": "नुस्खे",
+  "chats": "चैट"
+}
