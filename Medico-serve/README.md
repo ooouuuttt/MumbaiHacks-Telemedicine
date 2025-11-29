@@ -1,4 +1,3 @@
-````md
 # MediServe – Pharmacy Management System (AI Agent–Enhanced)
 
 MediServe is a robust, real-time pharmacy management platform built with Next.js and Firebase. It modernizes pharmacy workflows with integrated AI agents that automate routine tasks, optimize inventory health, strengthen customer communication, and deliver predictive operational insights.
