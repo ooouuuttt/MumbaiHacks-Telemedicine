@@ -1,0 +1,21 @@
+
+{
+  "home": "Home",
+  "consult": "Consult",
+  "appointments": "Appointments",
+  "records": "Records",
+  "profile": "Profile",
+  "my_account": "My Account",
+  "log_out": "Log out",
+  "symptom_checker": "Symptom Checker",
+  "book_consultation": "Book Consultation",
+  "scan_prescription": "Scan Prescription",
+  "nearby_medical": "Nearby Medical",
+  "order_medicines": "Order medicines",
+  "health_records": "Health Records",
+  "view_your_history": "View your history",
+  "reminders": "Reminders",
+  "health_news": "Health News",
+  "prescriptions": "Prescriptions",
+  "chats": "Chats"
+}
