@@ -1,21 +1,21 @@
-# **App Name**: ArogyaSetu Mini
+# **App Name**: MediServe
 
 ## Core Features:
 
-- Patient Registration: Allow patients to create profiles with basic details.
-- Symptom Checker: AI-powered tool that analyzes symptoms entered by patients and suggests possible conditions with urgency levels.
-- Teleconsultation Booking: Allow patients to book teleconsultations by choosing a specialty. Integration of a queue system to assign patients to available doctors is not included.
-- Health Records Display: Display consultations and prescriptions stored in the system for the patient.
-- Medicine Availability Check: Allow patients to check medicine availability at nearby pharmacies (using dummy data).
-- Appointment Reminders: Set reminders for upcoming appointments.
-- Health News Summaries: Generate brief summaries of the latest relevant health news using a generative AI tool.
+- Registration & Login: Secure registration and login functionality for medical owners, including license certificate and KYC verification.
+- Dashboard Overview: Display a summary of total stock, new prescriptions, pending requests, and notifications.
+- Stock Management: Add, update, and track medicine stock levels with expiry date management and low stock alerts.
+- Prescription Handling: Receive digital prescriptions, verify stock availability, and manage the fulfillment process.
+- Patient Communication Tool: Use a generative AI tool to create patient-facing confirmation messages and updates when medicines are ready for pickup.
+- Sales Analytics Tool: Utilize AI to determine trends on which medicines are in highest demand and predict future stock needs.
+- Notifications: Implement system-generated alerts for low stock, prescription requests, and approaching expiry dates.
 
 ## Style Guidelines:
 
-- Primary color: Deep sky blue (#00BFFF) to promote trust, peace and health.
-- Background color: Light-sky-blue (#E1F5FE), creating a calm atmosphere and allowing interface elements to stand out distinctly.
-- Accent color: Aqua (#00FFFF) to draw attention to key CTAs, but use sparingly.
-- Body and headline font: 'PT Sans' (sans-serif), because of its modern look, with a touch of warmth that inspires friendliness
-- Use a set of consistent and simple vector icons, using strokes of varying thickness to provide a cheerful and playful look. Keep all icons light-hearted and approachable. Focus the line stroke along the inside edge of all glyphs.
-- Prioritize a clean and intuitive layout with clear information hierarchy. Use white space effectively to avoid clutter.
-- Employ subtle transitions and animations to enhance user experience without being distracting. For example, smooth transitions when navigating between sections.
+- Primary color: Soft blue (#64B5F6) to convey trust and reliability.
+- Background color: Light grey (#F0F4F8) to provide a clean and professional look.
+- Accent color: Teal (#26A69A) for call-to-action buttons and important notifications.
+- Body and headline font: 'PT Sans', a humanist sans-serif that balances a modern look with some warmth and personality.
+- Use clear and recognizable icons related to medical supplies, prescriptions, and notifications.
+- Maintain a clean and organized layout for easy navigation and quick access to essential information.
+- Use subtle animations and transitions to provide visual feedback and enhance user experience.

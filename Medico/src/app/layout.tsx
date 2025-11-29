@@ -1,12 +1,11 @@
-
-import type { Metadata } from 'next';
+import type {Metadata} from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
-import { I18nProvider } from '@/context/i18n';
+import { Toaster } from "@/components/ui/toaster";
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'Medico',
-  description: 'Your Personal Health Companion',
+  title: 'MediServe',
+  description: 'Comprehensive pharmacy management solution.',
 };
 
 export default function RootLayout({
@@ -15,20 +14,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <I18nProvider>
+        <FirebaseClientProvider>
           {children}
-          <Toaster />
-        </I18nProvider>
+        </FirebaseClientProvider>
+        <Toaster />
       </body>
     </html>
   );
